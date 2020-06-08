@@ -1,0 +1,104 @@
+[
+  {
+    "name": "_sp_id.047d",
+    "value": "62008e48-d5d5-46e0-b6cb-6a0373ee9fa6.1591634581.1.1591634581..d24635e4-7843-461f-a8d2-28b462105b6e",
+    "domain": "www.strava.com",
+    "path": "/",
+    "expires": 1654706580,
+    "size": 109,
+    "httpOnly": false,
+    "secure": false,
+    "session": false
+  },
+  {
+    "name": "ajs_user_id",
+    "value": "28612122",
+    "domain": ".strava.com",
+    "path": "/",
+    "expires": 1623170580,
+    "size": 19,
+    "httpOnly": false,
+    "secure": false,
+    "session": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "_strava4_session",
+    "value": "t0n1r091n9ovg469003ma781alddge7f",
+    "domain": ".strava.com",
+    "path": "/",
+    "expires": -1,
+    "size": 48,
+    "httpOnly": true,
+    "secure": true,
+    "session": true
+  },
+  {
+    "name": "_dc_gtm_UA-6309847-24",
+    "value": "1",
+    "domain": ".strava.com",
+    "path": "/",
+    "expires": 1591634636,
+    "size": 22,
+    "httpOnly": false,
+    "secure": false,
+    "session": false
+  },
+  {
+    "name": "sp",
+    "value": "ffd0a045-8129-4fa7-a589-7e9bb50acd70",
+    "domain": ".strava.com",
+    "path": "/",
+    "expires": 1623170582.050089,
+    "size": 38,
+    "httpOnly": false,
+    "secure": true,
+    "session": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "ajs_anonymous_id",
+    "value": "%2213c360e7-1359-43c8-a42e-6bee39026e85%22",
+    "domain": ".strava.com",
+    "path": "/",
+    "expires": 1623170580,
+    "size": 58,
+    "httpOnly": false,
+    "secure": false,
+    "session": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "_gid",
+    "value": "GA1.2.740739973.1591634397",
+    "domain": ".strava.com",
+    "path": "/",
+    "expires": 1591720979,
+    "size": 30,
+    "httpOnly": false,
+    "secure": false,
+    "session": false
+  },
+  {
+    "name": "_ga",
+    "value": "GA1.2.1519406367.1591634397",
+    "domain": ".strava.com",
+    "path": "/",
+    "expires": 1654706579,
+    "size": 30,
+    "httpOnly": false,
+    "secure": false,
+    "session": false
+  },
+  {
+    "name": "_sp_ses.047d",
+    "value": "*",
+    "domain": "www.strava.com",
+    "path": "/",
+    "expires": 1591636380,
+    "size": 13,
+    "httpOnly": false,
+    "secure": false,
+    "session": false
+  }
+]
