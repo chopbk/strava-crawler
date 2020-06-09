@@ -33,7 +33,13 @@ const logger = require("./utils/logger");
             let athlete = await db.findOne("athlete", {
                 usernmae: memberInfo.usernmae,
             });
-            if (!athlete) return db.createNewDocument("athlete", memberInfo);
+
+            if (!athlete) {
+                logger.debug(`athlete ${memberInfo.username} does not exist`);
+                return db.createNewDocument("athlete", memberInfo);
+            } else {
+                logger.debug(`athlete ${memberInfo.username} exist`);
+            }
             return;
         })
     );

@@ -1,0 +1,4 @@
+{
+    "ignore": ["test/*.js", "data/**"],
+    "watch": ["admin/*", "model.js"]
+}
