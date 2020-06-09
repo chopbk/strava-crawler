@@ -1,4 +1,4 @@
-const dbCfg = (module.exports = {
+module.exports = {
     production: {
         level: "info",
     },
@@ -11,4 +11,4 @@ const dbCfg = (module.exports = {
     local: {
         level: "debug",
     },
-});
+};

@@ -1,0 +1,31 @@
+{
+    "name": "crawl-strava",
+    "version": "1.0.0",
+    "description": "crawl strava data",
+    "main": "app.js",
+    "dependencies": {
+        "circular-json": "^0.5.9",
+        "fs": "0.0.1-security",
+        "jsonfile": "^6.0.1",
+        "mongoose": "^5.9.18",
+        "path": "^0.12.7",
+        "puppeteer": "^3.3.0",
+        "winston": "^3.2.1"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "start": "node app.js",
+        "dev": "nodemon app.js --ignore data/*",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/chopbk/strava-crawler.git"
+    },
+    "author": "tamnd12",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/chopbk/strava-crawler/issues"
+    },
+    "homepage": "https://github.com/chopbk/strava-crawler#readme"
+}
