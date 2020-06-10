@@ -2,110 +2,128 @@
     {
         "name": "Nguyễn Đình Tâm",
         "profileUrl": "https://www.strava.com/athletes/28612122",
-        "stravaId": "28612122",
+        "athleteId": "28612122",
+        "gender": "MALE",
         "username": "tamnd12"
     },
     {
         "name": "Phúc Hồng",
         "profileUrl": "https://www.strava.com/athletes/47943815",
-        "stravaId": "47943815",
+        "athleteId": "47943815",
+        "gender": "FEMALE",
         "username": "phucnth3"
     },
     {
         "name": "Thien Vo Minh",
         "profileUrl": "https://www.strava.com/athletes/46975595",
-        "stravaId": "46975595",
+        "athleteId": "46975595",
+        "gender": "FEMALE",
         "username": "thienvm2"
     },
     {
         "name": "Huy NX",
         "profileUrl": "https://www.strava.com/athletes/47077060",
-        "stravaId": "47077060",
+        "athleteId": "47077060",
+        "gender": "MALE",
         "username": "huynx10"
     },
     {
         "name": "Bac Nguyen Canh",
         "profileUrl": "https://www.strava.com/athletes/44574341",
-        "stravaId": "44574341",
+        "athleteId": "44574341",
+        "gender": "MALE",
         "username": "bacnc1"
     },
     {
         "name": "Xuân Đỗ",
         "profileUrl": "https://www.strava.com/athletes/44850151",
-        "stravaId": "44850151",
+        "athleteId": "44850151",
+        "gender": "FEMALE",
         "username": "xuandt14"
     },
     {
         "name": "Thuy Phan",
         "profileUrl": "https://www.strava.com/athletes/45043619",
-        "stravaId": "45043619",
+        "athleteId": "45043619",
+        "gender": "FEMALE",
         "username": "thuypt82"
     },
     {
         "name": "Thảo Nguyên",
         "profileUrl": "https://www.strava.com/athletes/45065194",
-        "stravaId": "45065194",
+        "athleteId": "45065194",
+        "gender": "FEMALE",
         "username": "yennt138"
     },
 
     {
         "name": "Le Thi Bich Thuan",
         "profileUrl": "https://www.strava.com/athletes/44849200",
-        "stravaId": "44849200",
+        "athleteId": "44849200",
+        "gender": "FEMALE",
         "username": "thuanltb1"
     },
     {
         "name": "Việt Lê",
         "profileUrl": "https://www.strava.com/athletes/44573659",
-        "stravaId": "44573659",
+        "athleteId": "44573659",
+        "gender": "MALE",
         "username": "vietltx"
     },
     {
         "name": "Tuấn Vũ Đức",
         "profileUrl": "https://www.strava.com/athletes/44573832",
-        "stravaId": "44573832",
+        "athleteId": "44573832",
+        "gender": "MALE",
         "username": "tuanvd10"
     },
     {
         "name": "Đặng Việt Hưng",
         "profileUrl": "https://www.strava.com/athletes/44575298",
-        "stravaId": "44575298",
+        "athleteId": "44575298",
+        "gender": "MALE",
         "username": "hungdv39"
     },
     {
         "name": "Lâm Phùng Lê",
         "profileUrl": "https://www.strava.com/athletes/44331934",
-        "stravaId": "44331934",
+        "athleteId": "44331934",
+        "gender": "MALE",
         "username": "lampl"
     },
     {
         "name": "Vũ Chính",
         "profileUrl": "https://www.strava.com/athletes/34615961",
-        "stravaId": "34615961",
+        "athleteId": "34615961",
+        "gender": "MALE",
         "username": "chinhvd"
     },
     {
         "name": "Hien Nguyen Tien",
         "profileUrl": "https://www.strava.com/athletes/34615337",
-        "stravaId": "34615337",
+        "athleteId": "34615337",
+        "gender": "MALE",
         "username": "hiennt26"
     },
     {
         "name": "Nam H Nguyen",
         "profileUrl": "https://www.strava.com/athletes/60206022",
-        "stravaId": "60206022",
+        "athleteId": "60206022",
+        "gender": "MALE",
         "username": "namnh74"
     },
     {
         "name": "Trần Bằng",
         "profileUrl": "https://www.strava.com/athletes/47479202",
-        "stravaId": "47479202",
+        "athleteId": "47479202",
+        "gender": "MALE",
         "username": "bangtv2"
     },
     {
         "name": "Văn Cẩn Lê",
         "profileUrl": "https://www.strava.com/athletes/47479190",
-        "stravaId": "47479190",
+        "athleteId": "47479190",
+        "gender": "MALE",
         "username": "canlv"
     }
 ]

@@ -1,48 +1,51 @@
-const startBrowser = require("./crawler");
-const cookiePath = "./data/cookies.json";
-const memberPath = "./data/member.json";
-const { loadOrCreateCookie } = require("./crawler/cookies");
-const StravaClub = require("./strava/strava-club");
+const Crawler = require("./crawler");
+const Strava = require("./strava");
 const Db = require("./database");
-const fileSystem = require("./utils/file");
 // import config
 const CONFIG = require("./config")[process.env.NODE_ENV || "dev"];
 const URL = CONFIG.url;
+const PATH = CONFIG.path;
 const logger = require("./utils/logger");
 
 (async () => {
-    console.log(URL);
     const db = new Db(CONFIG.db);
-    await db.connect();
+    const crawler = new Crawler(CONFIG);
+    const strava = new Strava(CONFIG);
 
-    let { browser, page } = await startBrowser();
-    page = await loadOrCreateCookie(page, cookiePath);
+    try {
+        console.log(URL);
 
-    //const items = await scrapeInfiniteScrollItems(page, extractItems, 5);
-    let memberInfos = [];
-    if (await fileSystem.isFileExist(memberPath)) {
-        logger.debug("load member info from file system");
-        memberInfos = await fileSystem.readFile(memberPath);
-    } else {
-        logger.debug("load member info from crawler data");
-        memberInfos = await StravaClub.getMemberInfo(page, URL.clubMember);
-        await fileSystem.writeFile(memberPath, memberInfos);
-    }
-    await Promise.all(
-        memberInfos.map(async (memberInfo) => {
-            let athlete = await db.findOne("athlete", {
-                usernmae: memberInfo.usernmae,
-            });
+        // waiting for init something
+        await db.connect();
+        await crawler.init();
+        await strava.init(crawler.page);
+        await crawler.loadOrCreateCookie(strava.login, PATH.cookie);
 
-            if (!athlete) {
-                logger.debug(`athlete ${memberInfo.username} does not exist`);
-                return db.createNewDocument("athlete", memberInfo);
-            } else {
-                logger.debug(`athlete ${memberInfo.username} exist`);
+        // get clubmember
+        // let memberInfos = [];
+        // memberInfos = await strava.getMemberOfClubInfo();
+        // await db.saveAthleteInfos(memberInfos);
+        let athletes = await db.findAllAthlete();
+        // get activities of this month
+        let activities = [];
+        let months = ["01", "02", "03", "04", "05", "06"];
+        for (let i = 0; i < athletes.length; i++) {
+            console.log(athletes[i]);
+            if (athletes[i]) {
+                console.log(athletes[i].username);
+                //for (let j = 0; j < months.length; j++) {
+                activities = await strava.getAllActivitiesByMonth(
+                    athletes[i].athleteId,
+                    "2020",
+                    "04"
+                );
+                await db.saveActivityInfos(activities);
+                // }
             }
-            return;
-        })
-    );
-
-    await browser.close();
+        }
+    } catch (error) {
+        logger.error("[main] " + error.message);
+    } finally {
+        await crawler.close();
+    }
 })();

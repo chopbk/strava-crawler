@@ -4,12 +4,10 @@ let activities = document.querySelectorAll(
 activities = [...activities];
 let activityInfos = activities.map((activity) => {
     let activityInfo = {};
-    // get entry head
-    let entryHead = activity.querySelector("div.entry-head");
     // get athlete info
     let entryAthlete = activity.querySelector("div.entry-head a.entry-athlete");
     activityInfo.athleteId = entryAthlete.href.slice(
-        athlete.href.lastIndexOf("/") + 1
+        entryAthlete.href.lastIndexOf("/") + 1
     );
 
     activityInfo.athleteName = entryAthlete.textContent;
@@ -41,7 +39,7 @@ let activityInfos = activities.map((activity) => {
                 activityInfo.pace = paceInfo[0];
                 break;
             case "Time":
-                activityInfo.timeRun = activityStat.textContent;
+                activityInfo.runTime = activityStat.textContent;
         }
     });
     return activityInfo;
