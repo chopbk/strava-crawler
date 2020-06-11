@@ -22,7 +22,7 @@ class ChatBot {
         };
     }
 
-    async initBot() {
+    async init() {
         let appState = null;
         let credentials = this.credentials;
         let appStateExist = await fileSystem.isFileExist(this.PATH.facebook);
@@ -155,3 +155,4 @@ class ChatBot {
         });
     }
 }
+module.exports = ChatBot;

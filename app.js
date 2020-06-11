@@ -1,6 +1,7 @@
 const Crawler = require("./crawler");
 const Strava = require("./strava");
 const Db = require("./database");
+const ChatBot = require("./chatbot");
 // import config
 const CONFIG = require("./config")[process.env.NODE_ENV || "dev"];
 const URL = CONFIG.url;
@@ -11,7 +12,7 @@ const logger = require("./utils/logger");
     const db = new Db(CONFIG.db);
     const crawler = new Crawler(CONFIG);
     const strava = new Strava(CONFIG);
-
+    const chatBot = new ChatBot(CONFIG);
     try {
         console.log(URL);
 
@@ -20,7 +21,7 @@ const logger = require("./utils/logger");
         await crawler.init();
         await strava.init(crawler.page);
         await crawler.loadOrCreateCookie(strava.login, PATH.cookie);
-
+        await chatBot.init();
         // get clubmember
         // let memberInfos = [];
         // memberInfos = await strava.getMemberOfClubInfo();
@@ -37,7 +38,7 @@ const logger = require("./utils/logger");
                 activities = await strava.getAllActivitiesByMonth(
                     athletes[i].athleteId,
                     "2020",
-                    "04"
+                    "01"
                 );
                 await db.saveActivityInfos(activities);
                 // }
