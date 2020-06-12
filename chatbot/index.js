@@ -22,7 +22,8 @@ class ChatBot {
         };
     }
 
-    async init() {
+    async init(eventEmitter) {
+        this.eventEmitter = eventEmitter;
         let appState = null;
         let credentials = this.credentials;
         let appStateExist = await fileSystem.isFileExist(this.PATH.facebook);
@@ -103,8 +104,8 @@ class ChatBot {
                 return;
             }
             if (
-                message.threadID !== "100002955257901" &&
-                message.threadID !== "2434969166525250"
+                message.threadID !== "100002955257901"
+                //&&                message.threadID !== "2434969166525250"
             )
                 return;
 
@@ -125,25 +126,34 @@ class ChatBot {
                 switch (message.body) {
                     case "/help": {
                         this.api.sendMessage(
-                            "/help xem các lệnh chat bot\
-                            /offbot tắt bot\
-                            /getStravaGeneral.",
+                            "/help xem các lệnh chat bot\n \
+                            /offbot tắt bot\n \
+                            /getStravaGeneral.\n",
                             message.threadID
                         );
                         break;
                     }
+                    case "/getLastActivity":
+                        this.eventEmitter.emit(
+                            "getLastActivity",
+                            message.threadID
+                        );
+                        break;
+                    case "/getMonthSumary":
+                        this.eventEmitter.emit(
+                            "getMonthSumary",
+                            message.threadID
+                        );
+                        break;
                 }
                 // api.sendMessage("Tin nhắn của tao đây", message.threadID);
             }
+            /// first time running in threadId
             if (!this.answeredThreads.hasOwnProperty(message.threadID)) {
-                //Chức năng này dành cho người muốn bỏ qua ID nào đó
-                // Tìm id ở đây https://findmyfbid.in/
-                // Thêm 1 người vào chỉ cần thêm dấu ,"ID người"
-                // Group cũng thế
                 if (!this.allowGroupChat(message.threadID)) {
                     return;
                 }
-                if (this.allowUserChat(message.threadID)) {
+                if (!this.allowUserChat(message.threadID)) {
                     return;
                 }
                 this.answeredThreads[message.threadID] = true;
@@ -153,6 +163,14 @@ class ChatBot {
                 );
             }
         });
+    }
+    /**
+     *
+     * @param {string} content content of message want to send
+     * @param {number} threadId id of user
+     */
+    sendMessage(content, threadId) {
+        this.api.sendMessage(content, threadId);
     }
 }
 module.exports = ChatBot;
