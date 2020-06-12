@@ -2,14 +2,15 @@
 let StravaLoginURL = "https://www.strava.com/login/";
 const fileSystem = require("./../utils/file");
 const logger = require("./../utils/logger");
-
+const Validation = require("./../utils/validation");
 class Strava {
     constructor(CONFIG) {
         this.URL = CONFIG.url;
         this.PATH = CONFIG.path;
     }
-    async init(page) {
+    async init(page, db) {
         this.page = page;
+        this.db = db;
     }
     async login() {
         try {
@@ -68,7 +69,7 @@ class Strava {
             "div.entity-details, div.with-flyby"
         );
         activities = [...activities];
-        let activityInfos = activities.map((activity) => {
+        let activityInfos = activities.map(async (activity) => {
             let activityInfo = {};
             // get athlete info
             let entryAthlete = activity.querySelector(
@@ -100,13 +101,14 @@ class Strava {
             const isNumeric = (value) => {
                 return /^-{0,1}\d+$/.test(value);
             };
-            if (isNumeric(activityInfo.activityId) === false) return;
+            if (isNumeric(activityInfo.activityId) === false) return null;
+            let check = await this.db.findActivityById(activityInfo.activityId);
+            if (check) return null;
             activityInfo.name = entryActivity.textContent;
             // get activity stats
             let activityStats = activity.querySelectorAll(
                 "div.entry-body ul.inline-stats li"
             );
-            console.log(activityInfo);
             let count = 0;
             activityStats.forEach((activityStat) => {
                 if (count === 3) return;
@@ -127,6 +129,7 @@ class Strava {
             });
             return activityInfo;
         });
+        // return if activity
         return activityInfos;
     }
     async getRecentlyActivityOfAthlete(athleteId) {
@@ -137,6 +140,7 @@ class Strava {
             await this.page.goto(athleteUrl);
             logger.debug("load renceity activity of athlete");
             activityInfo = await this.page.evaluate(this.getActivityInfo);
+
             return activityInfo;
         } catch (error) {
             logger.error("[getRecentlyActivityOfAthlete] " + error.message);
@@ -144,8 +148,11 @@ class Strava {
             return activityInfo;
         }
     }
-    async getAllActivitiesByMonth(athleteId, year, month) {
+    async getAllActivitiesInMonth(athleteId, year, month) {
         let activityInfos = [];
+        logger.debug(
+            `load activity of athlete ${athleteId} in ${month}/${year}`
+        );
         try {
             const athleteUrl =
                 this.URL.athletes +
@@ -153,16 +160,36 @@ class Strava {
                 this.URL.intervalMonth +
                 year +
                 month;
-            console.log(athleteUrl);
             await this.page.goto(athleteUrl);
-            logger.debug(`load activity of athlete in ${month}/${year}`);
             activityInfos = await this.page.evaluate(this.getActivityInfo);
-            return activityInfos;
         } catch (error) {
             logger.error("[getActivityByMonth] " + error.message);
         } finally {
-            return activityInfos;
+            return activityInfos.filter(
+                (activityInfo) =>
+                    activityInfo !== null && !Validation.isEmpty(activityInfo)
+            );
         }
+    }
+    async calculateTotalDistanceInMonth(activities) {
+        let totalDistance = 0;
+        let totalRun = 0;
+        let totalTime = 0;
+
+        totalDistance = activities
+            .map((activity) => {
+                return parseFloat(activity.distance);
+            })
+            .reduce((a, b) => {
+                return a + b;
+            }, 0);
+        totalRun = activities.length;
+        logger.debug(`athelete have run ${totalDistance} km in this time`);
+        logger.debug(`athelete have run ${totalRun} time`);
+        return {
+            totalDistance: totalDistance,
+            totalRun: totalRun,
+        };
     }
 }
 module.exports = Strava;

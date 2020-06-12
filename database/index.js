@@ -43,34 +43,83 @@ class Database {
     async saveAthleteInfos(athleteInfos) {
         await Promise.all(
             athleteInfos.map(async (athleteInfo) => {
-                return this.saveAthleteInfo(athleteInfo);
+                if (athleteInfo) return this.saveAthleteInfo(athleteInfo);
             })
         );
     }
 
+    // activities
+    async findActivityById(activityId) {
+        let athlete = await this.activity.findOne({
+            activityId: activityId,
+        });
+        return athlete;
+    }
     // save activity
     async saveActivityInfo(activityInfo) {
+        console.log(activityInfo);
         if (!activityInfo) return;
         let activity = await this.activity.findOne({
             activityId: activityInfo.activityId,
         });
         if (!activity) {
-            logger.debug(`activity ${activityInfo.activityId} does not exist`);
+            logger.debug(
+                `activity ${activityInfo.activityId} of ${activityInfo.athleteName} does not exist`
+            );
             let newActivity = await new this.activity(activityInfo);
-            return newActivity.save();
+            await newActivity.save();
+            return 1;
         } else {
-            logger.debug(`activity ${activityInfo.activityId} exist`);
-            return;
+            logger.debug(
+                `activity ${activityInfo.activityId} of ${activityInfo.athleteName} exist`
+            );
+            return 0;
         }
     }
     async saveActivityInfos(activityInfos) {
-        await Promise.all(
+        let countArrary = await Promise.all(
             activityInfos.map(async (activityInfo) => {
-                logger.debug(JSON.stringify(activityInfo));
+                console.log(activityInfo);
                 return this.saveActivityInfo(activityInfo);
             })
         );
+        return countArrary.reduce((a, b) => {
+            return a + b;
+        }, 0);
     }
-    // activities
+    /**
+     * @description
+     * @param {Number} athleteId
+     * @param {Date} startTime
+     * @param {Date} endTime
+     */
+    async findAllActivitiesOfAthleteInTime(athleteId, startTime, endTime) {
+        logger.debug(
+            `get all activities in startTime ${startTime} and endTime ${endTime}`
+        );
+        let activities = await this.activity.find({
+            athleteId: athleteId,
+            timeStartRun: {
+                $gte: startTime,
+                $lte: endTime,
+            },
+        });
+        return activities;
+    }
+    /**
+     * This function find last activity in DB
+     */
+    async findLastActivity() {
+        let activity = await this.activity.findOne(
+            {
+                timeStartRun: {
+                    $lte: new Date().toISOString(),
+                },
+            },
+            {},
+            { sort: { timeStartRun: -1 } }
+        );
+        return activity;
+    }
 }
 module.exports = Database;
