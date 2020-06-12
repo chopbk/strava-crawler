@@ -4,14 +4,13 @@ const logger = require("./../utils/logger");
 class Crawler {
     constructor(CONFIG) {
         this.PATH = CONFIG.path;
+        this.CONFIG = CONFIG.puppeteer;
     }
     async init() {
-        this.browser = await puppeteer.launch({
-            headless: true,
-            //userDataDir: "./crawler/puppeteer_data",
-        });
+        this.browser = await puppeteer.launch(this.CONFIG.options);
         this.page = await this.browser.newPage();
         await this.page.setViewport({ width: 1920, height: 926 });
+        await this.page.setDefaultNavigationTimeout(this.CONFIG.timeout);
     }
     async loadOrCreateCookie(login) {
         // Read cookies if exist
@@ -42,7 +41,6 @@ class Crawler {
                         .querySelectorAll("button.js-add-kudo")
                         .forEach((node) => node.click());
                 });
-                console.log("Giving kudos for this.page %d", counter);
                 console.log(
                     "items.length = %d, itemTargetCount = %d",
                     items.length,
