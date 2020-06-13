@@ -1,4 +1,5 @@
-const login = require("facebook-chat-api");
+//const login = require("facebook-chat-api");
+const login = require("fca-unofficial");
 const readline = require("readline");
 const fileSystem = require("./../utils/file");
 
@@ -27,8 +28,7 @@ class ChatBot {
         let appState = null;
         let credentials = this.credentials;
         let appStateExist = await fileSystem.isFileExist(this.PATH.facebook);
-        if (appStateExist)
-            appState = await fileSystem.readFile(this.PATH.facebook);
+        if (appStateExist) appState = await fileSystem.readFile(this.PATH.facebook);
         if (appState)
             credentials = {
                 appState: appState,
@@ -50,8 +50,7 @@ class ChatBot {
             }
             this.api = api;
             // write to file if app state not exist
-            if (!appState)
-                fileSystem.writeFile(this.PATH.facebook, api.getAppState());
+            if (!appState) fileSystem.writeFile(this.PATH.facebook, api.getAppState());
             // return config bot
             return this.configBot();
         });
@@ -73,7 +72,7 @@ class ChatBot {
     }
     allowGroupChat(threadID) {
         if (this.allowGroupIds.find((x) => x == threadID)) {
-            console.error("block GroupId: " + threadID);
+            console.error("allow GroupId: " + threadID);
             return true;
         }
         return false;
@@ -81,7 +80,7 @@ class ChatBot {
 
     allowUserChat(threadID) {
         if (this.allowUserIds.find((x) => x == threadID)) {
-            console.error("block ID: " + threadID);
+            console.error("allow ID: " + threadID);
             return true;
         }
         return false;
@@ -95,19 +94,22 @@ class ChatBot {
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36", //get cái này xem trong file login.js
         });
         this.api.listenMqtt((err, message) => {
+            if (!message) return;
+            if (!message.body) return;
+            if (!this.botStatusThreads[message.threadID]) {
+                if (this.allowGroupChat[message.threadID] || this.allowUserChat[message.threadID]) {
+                    this.botStatusThreads[message.threadID] = true;
+                    return;
+                } else {
+                    return;
+                }
+            }
+
             //block icon: fix bug khi nhận đc icon
             if (message.body == "") {
-                this.api.sendMessage(
-                    "Bot không hiểu bạn nói. Xin lỗi nha :(",
-                    message.threadID
-                );
+                this.api.sendMessage("Bot không hiểu bạn nói. Xin lỗi nha :(", message.threadID);
                 return;
             }
-            if (
-                message.threadID !== "100002955257901"
-                //&&                message.threadID !== "2434969166525250"
-            )
-                return;
 
             if (message.body == "/startbot" || message.body == "/startBot") {
                 this.botStatusThreads[message.threadID] = true;
@@ -117,51 +119,49 @@ class ChatBot {
                 );
             } else if (message.body == "/offbot" || message.body == "/Offbot") {
                 this.botStatusThreads[message.threadID] = false;
-                this.api.sendMessage(
-                    "Đã tắt chế độ nói chuyện với bot strava.",
-                    message.threadID
-                );
+                this.api.sendMessage("Đã tắt chế độ nói chuyện với bot strava.", message.threadID);
             }
             if (this.botStatusThreads.hasOwnProperty(message.threadID)) {
-                switch (message.body) {
+                console.log(message.body);
+                if (message.body.charAt(0) != "/") return;
+                let messageArr = message.body.split(" ", 3);
+                switch (messageArr[0]) {
                     case "/help": {
                         this.api.sendMessage(
-                            "/help xem các lệnh chat bot\n \
+                            "Trợ giúp: /help xem các lệnh chat bot\n \
                             /offbot tắt bot\n \
-                            /getStravaGeneral.\n",
+                            /getlastactivity xem hoạt động gần nhất.\n \
+                            /getsummary <username> xem tổng kết tháng này của <username>",
                             message.threadID
                         );
                         break;
                     }
-                    case "/getLastActivity":
-                        this.eventEmitter.emit(
-                            "getLastActivity",
-                            message.threadID
-                        );
+                    case "/getlastactivity":
+                        this.eventEmitter.emit("getlastactivity", message.threadID);
                         break;
-                    case "/getMonthSumary":
-                        this.eventEmitter.emit(
-                            "getMonthSumary",
-                            message.threadID
-                        );
+                    case "/getsummary":
+                        this.eventEmitter.emit("getsummary", message.threadID, messageArr[1]);
                         break;
                 }
                 // api.sendMessage("Tin nhắn của tao đây", message.threadID);
             }
+
             /// first time running in threadId
-            if (!this.answeredThreads.hasOwnProperty(message.threadID)) {
-                if (!this.allowGroupChat(message.threadID)) {
-                    return;
-                }
-                if (!this.allowUserChat(message.threadID)) {
-                    return;
-                }
-                this.answeredThreads[message.threadID] = true;
-                this.api.sendMessage(
-                    "Tin nhắn trả lời tự động từ bot của Tâm.\n- Trả lời `/startbot` để làm việc với bot.",
-                    message.threadID
-                );
-            }
+            // if (!this.answeredThreads.hasOwnProperty(message.threadID)) {
+            //     if (this.allowGroupChat(message.threadID)) {
+            //         this.botStatusThreads[message.threadID] = true;
+            //         return;
+            //     }
+            //     if (this.allowUserChat(message.threadID)) {
+            //         this.botStatusThreads[message.threadID] = true;
+            //         return;
+            //     }
+            //     this.answeredThreads[message.threadID] = true;
+            //     this.api.sendMessage(
+            //         "Tin nhắn trả lời tự động từ bot của Tâm.\n- Trả lời `/startbot` để làm việc với bot.",
+            //         message.threadID
+            //     );
+            // }
         });
     }
     /**

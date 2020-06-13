@@ -1,6 +1,7 @@
 const puppeteer = require("puppeteer");
 const fileSystem = require("./../utils/file");
 const logger = require("./../utils/logger");
+
 class Crawler {
     constructor(CONFIG) {
         this.PATH = CONFIG.path;
@@ -10,7 +11,7 @@ class Crawler {
         this.browser = await puppeteer.launch(this.CONFIG.options);
         this.page = await this.browser.newPage();
         await this.page.setViewport({ width: 1920, height: 926 });
-        await this.page.setDefaultNavigationTimeout(this.CONFIG.timeout);
+        //await this.page.setDefaultNavigationTimeout(this.CONFIG.timeout);
     }
     async loadOrCreateCookie(login) {
         // Read cookies if exist
@@ -26,20 +27,14 @@ class Crawler {
             await fileSystem.writeFile(this.PATH.cookie, cookies);
         }
     }
-    async scrapeInfiniteScrollItems(
-        extractItems,
-        itemTargetCount,
-        scrollDelay = 10000
-    ) {
+    async scrapeInfiniteScrollItems(extractItems, itemTargetCount, scrollDelay = 10000) {
         let counter = 1;
         let items = [];
         try {
             let previousHeight;
             while (items.length < itemTargetCount) {
                 await this.page.evaluate(() => {
-                    document
-                        .querySelectorAll("button.js-add-kudo")
-                        .forEach((node) => node.click());
+                    document.querySelectorAll("button.js-add-kudo").forEach((node) => node.click());
                 });
                 console.log(
                     "items.length = %d, itemTargetCount = %d",
@@ -47,15 +42,9 @@ class Crawler {
                     itemTargetCount
                 );
                 items = await this.page.evaluate(extractItems);
-                previousHeight = await this.page.evaluate(
-                    "document.body.scrollHeight"
-                );
-                await this.page.evaluate(
-                    "window.scrollTo(0, document.body.scrollHeight)"
-                );
-                await this.page.waitForFunction(
-                    `document.body.scrollHeight > ${previousHeight}`
-                );
+                previousHeight = await this.page.evaluate("document.body.scrollHeight");
+                await this.page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
+                await this.page.waitForFunction(`document.body.scrollHeight > ${previousHeight}`);
                 await this.page.waitFor(scrollDelay);
                 counter++;
             }

@@ -94,9 +94,7 @@ class Database {
      * @param {Date} endTime
      */
     async findAllActivitiesOfAthleteInTime(athleteId, startTime, endTime) {
-        logger.debug(
-            `get all activities in startTime ${startTime} and endTime ${endTime}`
-        );
+        logger.debug(`get all activities in startTime ${startTime} and endTime ${endTime}`);
         let activities = await this.activity.find({
             athleteId: athleteId,
             timeStartRun: {
@@ -120,6 +118,33 @@ class Database {
             { sort: { timeStartRun: -1 } }
         );
         return activity;
+    }
+    // save activity
+    async saveChallengeInfo(challengeInfo) {
+        if (!challengeInfo) return;
+        let challenge = await this.findChallengeInfoByUsername(challengeInfo.username);
+        if (!challenge) {
+            logger.debug(`challenge ${challengeInfo.username}  does not exist`);
+            let newChallenge = await new this.challenge(challengeInfo);
+            await newChallenge.save();
+            return 1;
+        } else {
+            await challenge.updateOne({
+                $set: {
+                    totalDistance: challengeInfo.totalDistance,
+                    currentMoney: challengeInfo.currentMoney,
+                },
+            });
+            logger.debug(`challenge ${challenge.username} exist`);
+            return 2;
+        }
+    }
+    // activities
+    async findChallengeInfoByUsername(username) {
+        let challengeInfo = await this.challenge.findOne({
+            username: username,
+        });
+        return challengeInfo;
     }
 }
 module.exports = Database;
