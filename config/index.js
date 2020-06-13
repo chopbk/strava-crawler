@@ -4,6 +4,7 @@ const urlCfg = require("./url.cfg");
 const pathCfg = require("./path.cfg");
 const accountCfg = require("./account.cfg");
 const puppeteerCfg = require("./puppeteer.cfg");
+const chatbot = require("./chatbot.cfg");
 module.exports = {
     production: {
         port: 8080,
@@ -12,6 +13,7 @@ module.exports = {
         path: pathCfg.production,
         account: accountCfg.production,
         puppeteer: puppeteerCfg.production,
+        chatbot: chatbot.production,
     },
     dev: {
         port: 8080,
@@ -21,6 +23,7 @@ module.exports = {
         path: pathCfg.dev,
         account: accountCfg.dev,
         puppeteer: puppeteerCfg.dev,
+        chatbot: chatbot.dev,
     },
     test: {
         port: 8080,
@@ -30,6 +33,7 @@ module.exports = {
         path: pathCfg.test,
         account: accountCfg.test,
         puppeteer: puppeteerCfg.test,
+        chatbot: chatbot.test,
     },
     local: {
         port: 8080,
@@ -39,5 +43,6 @@ module.exports = {
         path: pathCfg.local,
         account: accountCfg.local,
         puppeteer: puppeteerCfg.local,
+        chatbot: chatbot.local,
     },
 };

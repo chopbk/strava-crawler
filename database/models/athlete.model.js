@@ -20,6 +20,18 @@ const AthleteSchema = new Schema({
         enum: ["MALE", "FEMALE", "ANOTHER"],
     },
     profileUrl: String,
+    summaryStats: {
+        distanceMonth: Number,
+        distanceYear: Number,
+        totalRunMonth: Number,
+        totalRunYear: Number,
+    },
+    challenges: [
+        {
+            type: Schema.ObjectId,
+            ref: "challenge",
+        },
+    ],
 });
 
 module.exports = mongoose.model("athlete", AthleteSchema);
